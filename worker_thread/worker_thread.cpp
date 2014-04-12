@@ -63,18 +63,19 @@ void WorkerThread::stop()
 
 void WorkerThread::__thread_func()
 {
-	while (m_b_stop == false)
+	while (!m_b_stop)
 	{
-		std::cout << "my id: " << std::this_thread::get_id() << std::endl;
-		if (m_b_pause == true)
+		std::cout << "==> begin " << "function thread id : " << std::this_thread::get_id() << std::endl;
+		if (m_b_pause)
 		{
 			std::unique_lock<std::mutex> lock(m_mutex);
-			while (m_b_pause == true)
+			while (m_b_pause)
 			{
 				m_cond_v.wait(lock);
 			}
 		}
 		do_work();
+		std::cout << "-------------------------------------- end" << std::endl << std::endl;
 	}
 
 	std::cout << "done running\n";

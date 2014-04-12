@@ -15,7 +15,7 @@ private:
 	{
 		static int n = 0;
 		std::this_thread::sleep_for(std::chrono::seconds(1));
-		std::cout << "my_do_work:" << std::setw(4) << ++n << std::endl << std::endl;
+		std::cout << "my_do_work:" << std::setw(4) << ++n << std::endl;
 	}
 
 };
