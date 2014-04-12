@@ -79,7 +79,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="test.cpp" />
     <ClCompile Include="worker_thread.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="worker_thread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
