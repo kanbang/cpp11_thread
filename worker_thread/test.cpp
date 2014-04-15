@@ -8,6 +8,8 @@
 #include <iostream>
 #include <iomanip>
 
+#include "easylogging++.h"
+
 class MyThread : public WorkerThread
 {
 private:
@@ -15,11 +17,13 @@ private:
 	{
 		static int n = 0;
 		std::this_thread::sleep_for(std::chrono::seconds(1));
-		std::cout << "my_do_work:" << std::setw(4) << ++n << std::endl;
+		LOG(TRACE) << "my_do_work:" << std::setw(4) << ++n;
 	}
 
 };
 
+
+_INITIALIZE_EASYLOGGINGPP
 
 int _tmain(int argc, _TCHAR* argv[])
 {

@@ -1,7 +1,9 @@
 
 
 #include "worker_thread.h"
+#include "easylogging++.h"
 #include <iostream>
+
 
 WorkerThread::WorkerThread() :
 m_b_pause(false),
@@ -23,14 +25,14 @@ void WorkerThread::start()
 	if (NULL == m_thread)
 	{
 		m_thread = new std::thread([this]{ __thread_func(); });
-		std::cout << "start thread with id: " << m_thread->get_id() << std::endl;
+		LOG(TRACE) << "start thread with id: " << m_thread->get_id().hash();
 		m_b_running = true;
 	}
 }
 
 void WorkerThread::pause()
 {
-	std::cout << "pause thread with id: " << m_thread->get_id() << std::endl;
+	LOG(TRACE) << "pause thread with id: " << m_thread->get_id();
 	std::unique_lock<std::mutex> lock(m_mutex);
 	m_b_pause = true;
 	m_cond_v.notify_one();
@@ -38,7 +40,7 @@ void WorkerThread::pause()
 
 void WorkerThread::resume()
 {
-	std::cout << "resume thread with id: " << m_thread->get_id() << std::endl;
+	LOG(TRACE) << "resume thread with id: " << m_thread->get_id();
 	std::unique_lock<std::mutex> lock(m_mutex);
 	m_b_pause = false;
 	m_cond_v.notify_one();
@@ -46,26 +48,26 @@ void WorkerThread::resume()
 
 void WorkerThread::stop()
 {
-	std::cout << "stop thread with id: " << m_thread->get_id() << std::endl;
+	LOG(TRACE) << "stop thread with id: " << m_thread->get_id();
 
 	std::unique_lock<std::mutex> lock(m_mutex);
 	m_b_stop = true;
 	m_cond_v.notify_one();
 
-	std::cout << "joining\n";
+	LOG(TRACE) << "joining\n";
 	m_thread->join();
-	std::cout << "joined\n";
+	LOG(TRACE) << "joined\n";
 
 	m_b_running = false;
 
-	std::cout << "stop thread\n";
+	LOG(TRACE) << "stop thread\n";
 }
 
 void WorkerThread::__thread_func()
 {
 	while (!m_b_stop)
 	{
-		std::cout << "==> begin " << "function thread id : " << std::this_thread::get_id() << std::endl;
+		LOG(TRACE) << "==> begin " << "function thread id : " << std::this_thread::get_id().hash();
 		if (m_b_pause)
 		{
 			std::unique_lock<std::mutex> lock(m_mutex);
@@ -75,8 +77,8 @@ void WorkerThread::__thread_func()
 			}
 		}
 		do_work();
-		std::cout << "-------------------------------------- end" << std::endl << std::endl;
+		LOG(TRACE) << "-------------------------------------- end";
 	}
 
-	std::cout << "done running\n";
+	LOG(TRACE) << "done running\n";
 }
